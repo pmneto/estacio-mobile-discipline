@@ -1,26 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
 import DisplayData from './components/DisplayData';
 
 export default function App() {
   const [data, setData] = useState({ temperature: null, humidity: null });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    fetch('https://<nome-da-azure-function>.azurewebsites.net/api/obter-dados')
+  // Função para buscar os dados mais recentes da API CosmosDB
+  const fetchData = () => {
+    setLoading(true);  // Começa a mostrar o indicador de carregamento
+    fetch(' sua URL da FUNCTION Aqui')  // Atualize com o endpoint da sua API
       .then(response => response.json())
       .then(json => {
         setData({
-          temperature: json.temperature,
-          humidity: json.humidity
+          temperature: json.temperatura,
+          humidity: json.umidade
         });
-        setLoading(false);
+        setLoading(false);  // Oculta o indicador de carregamento
       })
       .catch(error => {
         console.error(error);
-        setLoading(false);
+        setLoading(false);  // Oculta o indicador de carregamento
       });
+  };
+
+  // useEffect para buscar os dados ao carregar o componente
+  useEffect(() => {
+    fetchData();  // Chama a função fetchData ao carregar o componente
   }, []);
+
+  // Função chamada ao puxar para atualizar (pull-to-refresh)
+  const onRefresh = () => {
+    setRefreshing(true);  // Mostra o indicador de atualização
+    fetchData();  // Faz a requisição de atualização
+    setRefreshing(false);  // Oculta o indicador de atualização
+  };
 
   if (loading) {
     return (
@@ -31,16 +46,21 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView 
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <Text style={styles.title}>Monitoramento de Bolos</Text>
       <DisplayData data={data} />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
