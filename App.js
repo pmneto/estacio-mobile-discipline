@@ -10,7 +10,7 @@ export default function App() {
   // Função para buscar os dados mais recentes da API CosmosDB
   const fetchData = () => {
     setLoading(true);  // Começa a mostrar o indicador de carregamento
-    fetch(' sua URL da FUNCTION Aqui')  // Atualize com o endpoint da sua API
+    fetch('Sua URL da Function AQUI ')  // Atualize com o endpoint da sua API
       .then(response => response.json())
       .then(json => {
         setData({
@@ -46,27 +46,53 @@ export default function App() {
   }
 
   return (
-    <ScrollView 
-      contentContainerStyle={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      <Text style={styles.title}>Monitoramento de Bolos</Text>
-      <DisplayData data={data} />
-    </ScrollView>
+    <View style={styles.container}>
+      
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Extensão em Programação para Dispositivos Móveis Android</Text>
+      </View>
+
+      
+      <ScrollView 
+        contentContainerStyle={styles.content}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <Text style={styles.title}>Monitoramento de Temperatura e Umidade:</Text>
+        <DisplayData data={data} />
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    backgroundColor: '#0073e6', // Azul tom Estácio
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  content: {
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
+    textAlign: 'center',
   },
 });
